@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Cửa hàng Demo{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; max-width: 900px; }
+    .banner-secure { color: #0a7; font-weight: bold; }
+    .banner-vuln { color: #c00; font-weight: bold; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+    .comment { border-left: 3px solid #888; padding-left: 0.75rem; margin: 0.75rem 0; }
+    nav a { margin-right: 1rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('index') }}">Trang chủ</a>
+    <a href="{{ url_for('login') }}">Đăng nhập</a>
+  </nav>
+  {% if secure_mode %}
+    <p class="banner-secure">Chế độ bảo mật: BẬT (parameterized SQL + escape XSS)</p>
+  {% else %}
+    <p class="banner-vuln">CẢNH BÁO LAB: Ứng dụng cố tình dễ bị SQLi / Stored XSS — chỉ chạy localhost.</p>
+  {% endif %}
+  {% block content %}{% endblock %}
+</body>
+</html>

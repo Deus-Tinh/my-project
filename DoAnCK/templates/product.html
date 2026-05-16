@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ product[1] }} — Chi tiết{% endblock %}
+{% block content %}
+<h1>{{ product[1] }}</h1>
+<p><strong>Giá:</strong> {{ "{:,.0f}".format(product[2]) }} VNĐ</p>
+<p>{{ product[3] }}</p>
+<h2>Bình luận</h2>
+{% for c in comments %}
+  <div class="comment">
+    <strong>{{ c[2] }}</strong> <small>(#{{ c[0] }})</small>
+    {# LAB: khi không vá, render HTML thô → Stored XSS. Khi đã vá, Jinja tự escape. #}
+    {% if vulnerable_xss %}
+      <div>{{ c[3] | safe }}</div>
+    {% else %}
+      <div>{{ c[3] }}</div>
+    {% endif %}
+  </div>
+{% else %}
+  <p>Chưa có bình luận.</p>
+{% endfor %}
+<h3>Gửi bình luận</h3>
+<form method="post" action="{{ url_for('add_comment', product_id=product[0]) }}">
+  <p><label>Tên hiển thị: <input type="text" name="username" value="khach" maxlength="64"></label></p>
+  <p><label>Nội dung:<br><textarea name="body" rows="4" cols="60" placeholder="Nhập bình luận..."></textarea></label></p>
+  <button type="submit">Gửi</button>
+</form>
+<p><a href="{{ url_for('index') }}">← Về danh sách</a></p>
+{% endblock %}

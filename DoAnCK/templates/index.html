@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Trang chủ — Cửa hàng Demo{% endblock %}
+{% block content %}
+<h1>Sản phẩm</h1>
+<form action="{{ url_for('search') }}" method="get">
+  <label>Tìm kiếm: <input type="text" name="q" value="{{ query or '' }}" size="40" placeholder="Nhập tên sản phẩm..."></label>
+  <button type="submit">Tìm</button>
+</form>
+{% if query is not none %}
+  <p>Kết quả cho: <code>{{ query }}</code></p>
+{% endif %}
+<table>
+  <thead><tr><th>ID</th><th>Tên</th><th>Giá (VNĐ)</th><th></th></tr></thead>
+  <tbody>
+  {% for row in products %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      {# Cột 3: giá (số) hoặc dữ liệu lộ từ UNION (chuỗi) — không dùng format số cứng. #}
+      <td>
+        {% if row[2] is number %}
+          {{ "{:,.0f}".format(row[2]) }}
+        {% else %}
+          {{ row[2] }}
+        {% endif %}
+      </td>
+      <td><a href="{{ url_for('product_detail', product_id=row[0]) }}">Chi tiết</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="4">Không có sản phẩm.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
